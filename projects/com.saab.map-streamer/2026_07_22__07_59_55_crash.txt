@@ -1,0 +1,18 @@
+------ Crash Dump generated 2026-07-22 07:59:55 - GizmoSDK Ver:2.12.326 --------
+Thread 11120 threw SEH Exception ('EXCEPTION_ACCESS_VIOLATION') outside process()
+Memory Avail:7352446976 Total:17126223872 Alloc:0
+------------ <StackDump> ------------
+0:	In RtlInitializeResource(+1251)  file:  line:0  module:ntdll.dll
+1:	In RtlSleepConditionVariableCS(+1087)  file:  line:0  module:ntdll.dll
+2:	In RtlEnterCriticalSection(+242)  file:  line:0  module:ntdll.dll
+3:	In gzMutex::waitLock(+19)  file:  line:0  module:gzBase64.dll
+4:	In gzThread::chain(+932)  file:  line:0  module:gzBase64.dll
+5:	In gzBatchThread::process(+4339)  file:  line:0  module:gzBase64.dll
+6:	In gzBatchThread::process(+926)  file:  line:0  module:gzBase64.dll
+7:	In gzThread::onProgramExecution(+222)  file:  line:0  module:gzBase64.dll
+8:	In gzProgramExecution::checkBaseExceptions(+18)  file:  line:0  module:gzBase64.dll
+9:	In gzProgramExecution::closeDump(+276)  file:  line:0  module:gzBase64.dll
+10:	In gzThreadTicker::setTickPolicy(+91)  file:  line:0  module:gzBase64.dll
+11:	In wcsrchr(+336)  file:  line:0  module:ucrtbase.dll
+12:	In BaseThreadInitThunk(+23)  file:  line:0  module:KERNEL32.DLL
+13:	In RtlUserThreadStart(+44)  file:  line:0  module:ntdll.dll

@@ -1,0 +1,69 @@
+trigger:
+  - master
+  - release/*
+
+variables:
+  ArticleFull: 8866027201
+  ProjectID: MapStreamer
+  Major: 4
+  Minor: 7
+
+# Build number format
+name: $(ArticleFull).$(Major).$(Minor).$(rev:r)
+
+resources:
+  repositories:
+    - repository: release_templates
+      type: git
+      name: release_templates
+      project: Common
+      ref: refs/tags/2.2.9
+
+stages:
+  - stage: Checkout
+    jobs:
+      - job: Checkout
+        workspace:
+          clean: all
+
+        pool:
+          name: TS-Windows
+          demands:
+            - SEP_ENV_TS_DEV_BUILD
+
+        steps:
+          - checkout: self
+            lfs: true
+            clean: true
+            persistCredentials: true
+
+          - task: set-version-variables@1
+            displayName: Set version variables according to BuildNumber
+            inputs:
+              setProductVersionVariable: true
+              setMajorVariable: true
+              setMinorVariable: true
+              setBuildVariable: true
+              setRevisionVariable: true
+              failOnVersionSyntax: true
+              defineCustomizedVariable: false
+
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Wiki Artifact
+            inputs:
+              PathtoPublish: CHANGELOG.md
+              ArtifactName: wiki
+
+  - ${{ if or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')) }}:
+      - stage: PublishWiki
+        displayName: Publish to Wiki, tag and retain
+        dependsOn: Checkout
+        jobs:
+          - template: update_wiki.yml@release_templates
+            parameters:
+              article: $(ArticleFull)
+              project: Common
+              wiki: Common
+              page: 1479
+              changelogpath: wiki/CHANGELOG.md
+              publishEnvironment: PublishEnvironment
