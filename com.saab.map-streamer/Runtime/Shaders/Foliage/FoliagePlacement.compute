@@ -555,7 +555,7 @@ bool IsHidden(float3 worldPos, float height, float3 toFoliage)
     
     for (int y = minXY.y; y < maxXY.y; y += 2)
     {
-        int offset = y % 2;
+        int offset = y & 1; // avoid int modulus shader warning
         for (int x = minXY.x + offset; x < maxXY.x; x += 2)
         {
             int2 lowResPixel = int2(x, y);

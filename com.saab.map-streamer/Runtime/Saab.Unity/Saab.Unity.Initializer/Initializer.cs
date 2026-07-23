@@ -175,7 +175,16 @@ namespace Saab.Unity.Initializer
 
         private void Message_OnMessage(string sender, MessageLevel level, string message)
         {
-            // Just to route some messages from Gizmo to managed unity
+            // Filter known benign upstream/demo noise so Editor Console stays clean.
+            if (!string.IsNullOrEmpty(message))
+            {
+                if (message.Contains("crossboard_res - FULL.gzd"))
+                    return;
+                if (message.Contains("Lock contention detected"))
+                    return;
+                if (message.Contains("FRAME LOST"))
+                    return;
+            }
 
             switch (level & MessageLevel.LEVEL_MASK)
             {
@@ -183,8 +192,8 @@ namespace Saab.Unity.Initializer
                 case MessageLevel.PERF_DEBUG:
                 case MessageLevel.DEBUG:
                 case MessageLevel.TRACE_DEBUG:
-                    Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, message);
-                    break;
+                    // Too noisy for normal Editor Play mode
+                    return;
 
                 case MessageLevel.NOTICE:
                     Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, message);
