@@ -184,6 +184,9 @@ namespace Saab.Unity.Initializer
                     return;
                 if (message.Contains("FRAME LOST"))
                     return;
+                // Native Gizmo teardown noise in Editor Play/Stop
+                if (message.Contains("gzMutex") && message.Contains("unbalanced"))
+                    return;
             }
 
             switch (level & MessageLevel.LEVEL_MASK)
